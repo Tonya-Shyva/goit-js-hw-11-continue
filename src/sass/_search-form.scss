@@ -103,9 +103,11 @@ input:not(:placeholder-shown) {
 }
 
 .load-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
   padding: 10px 20px;
-  text-align: center;
   text-transform: uppercase;
   color: var(--color-light);
   background-color: var(--color-bcg);
@@ -118,6 +120,24 @@ input:not(:placeholder-shown) {
 
 .load-more:hover {
   background-color: var(--color-activ);
+}
+
+.load-more:disabled {
+  // opacity: 0.65;
+  background-color: rgba(151, 217, 245, 0.65);
+  cursor: none;
+}
+
+.load-more.is-hidden {
+  display: none;
+}
+
+.load-more > .spinner.is-hidden {
+  display: none;
+}
+
+.label ~ .spinner.is-hidden {
+  margin-left: 10px;
 }
 
 .to-top {
