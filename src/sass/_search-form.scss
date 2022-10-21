@@ -118,7 +118,8 @@ input:not(:placeholder-shown) {
   transition: background-color var(--dur) var(--bez);
 }
 
-.load-more:hover {
+.load-more:hover,
+.load-more:focus {
   background-color: var(--color-activ);
 }
 
@@ -161,4 +162,10 @@ input:not(:placeholder-shown) {
 
 .to-top:hover {
   box-shadow: 0px 2px 6px rgba(20, 71, 212, 0.3);
+}
+
+.visually-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }

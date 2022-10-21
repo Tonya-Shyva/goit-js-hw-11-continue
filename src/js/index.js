@@ -10,14 +10,14 @@ const inputRef = document.querySelector('input[type="text"]');
 const btnSearch = document.querySelector('.btn-submit');
 const gallery = document.querySelector('.gallery');
 const btnToTop = document.querySelector('.to-top');
-
 const loadMoreBtn = new LoadMoreBtn({ selector: '.load-more', hidden: true });
 
 const gallerySimpleLightbox = new SimpleLightbox('.gallery a');
 let pageNumber = 1;
+let pages = 0;
 
-// btnLoadMore.style.display = 'none';
-btnToTop.style.display = 'none';
+// btnToTop.style.display = 'none';
+btnToTop.classList.add('visually-hidden');
 
 btnSearch.addEventListener('click', onBtnSearchClick);
 
@@ -36,6 +36,7 @@ function onBtnSearchClick(e) {
           'Sorry, there are no images matching your search query. Please try again.'
         );
       } else {
+        pages = Math.ceil(data.totalHits / data.hits.length);
         renderImageList(data.hits);
 
         loadMoreBtn.disable();
@@ -48,8 +49,8 @@ function onBtnSearchClick(e) {
         } else {
           loadMoreBtn.enable();
         }
-        gallerySimpleLightbox.refresh();
       }
+      gallerySimpleLightbox.refresh();
     });
   }
 }
@@ -58,13 +59,15 @@ loadMoreBtn.refs.button.addEventListener('click', onBtnLoadMoreClick);
 
 function onBtnLoadMoreClick() {
   const trimmedValue = inputRef.value.trim();
-  pageNumber += 1;
-  btnToTop.style.display = 'inline-flex';
+
   loadMoreBtn.disable();
-  fetchImages(trimmedValue, pageNumber).then(data => {
+
+  fetchImages(trimmedValue, (pageNumber += 1)).then(data => {
+    // console.log(data);
+    // console.log(pageNumber, pages);
     renderImageList(data.hits);
-    // console.log('onBtnLoadMoreClick', data);
-    if (data.hits.length === 0 || data.hits.length < 40) {
+
+    if (pageNumber === pages) {
       scrollByAfterLoadMore();
       Notiflix.Notify.failure(
         "We're sorry, but you've reached the end of search results."
@@ -87,7 +90,7 @@ function renderImageList(images) {
 function cleanGallery() {
   gallery.innerHTML = '';
   pageNumber = 1;
-  btnToTop.style.display = 'none';
+  // btnToTop.style.display = 'none';
   loadMoreBtn.hide();
 }
 
@@ -99,14 +102,4 @@ function scrollByAfterLoadMore() {
     top: cardHeight * 2.15,
     behavior: 'smooth',
   });
-}
-
-btnToTop.addEventListener('scroll', scrollToTop);
-function scrollToTop(e) {
-  e.preventDefault();
-  window.scrollTo({
-    top: 50,
-    behavior: 'smooth',
-  });
-  btnToTop.removeEventListener('scroll', scrollToTop);
 }
