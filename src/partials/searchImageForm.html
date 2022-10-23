@@ -16,14 +16,14 @@
 
 <div class="gallery"></div>
 
-<button type="button" class="load-more">
+<!-- <button type="button" class="load-more">
   <span
     class="spinner-border spinner-border-sm spinner is-hidden"
     role="status"
     aria-hidden="true"
   ></span
   ><span class="label">Load more</span>
-</button>
+</button> -->
 <a href="#search-form" class="to-top">
   <svg width="30" height="30" aria-label="to top">
     <use href="./images/icons.svg#arrow-up" />
@@ -31,5 +31,14 @@
 </a>
 
 <!-------------- pagination ------------->
-
-<div class="pagination"></div>
+<div class="pagination pagination__container">
+  <div class="pagination__wrap">
+    <button class="pagination__arrow pagination__arrow--left" type="button">
+      &#60;
+    </button>
+    <ul class="pagination__pages"></ul>
+    <button class="pagination__arrow pagination__arrow--right" type="button">
+      &#62;
+    </button>
+  </div>
+</div>

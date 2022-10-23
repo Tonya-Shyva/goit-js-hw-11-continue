@@ -3,7 +3,6 @@ import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import photoMarkupTemplate from '../templates/photoCard.hbs';
-
 import LoadMoreBtn from './load-more-btn';
 
 const inputRef = document.querySelector('input[type="text"]');

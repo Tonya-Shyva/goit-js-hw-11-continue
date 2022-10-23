@@ -171,23 +171,36 @@ input:not(:placeholder-shown) {
 }
 
 // ----------pagination----------------
-.pagination {
+
+.pagination,
+.pagination__wrap {
   display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
+  align-items: center;
 }
 
-.pagination__list {
+.pagination__pages {
   display: flex;
-  list-style-type: none;
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin: 0;
 }
 
-.pagination__item {
+.pagination__page {
+  width: 40px;
+  height: 40px;
   padding: 8px;
-  margin: 8px;
   cursor: pointer;
 }
 
-.pagination__item--active {
+.pagination__page--active {
   font-weight: 800;
   color: gold;
+}
+
+.pagination__arrow {
+  width: 40px;
+  height: 40px;
 }
