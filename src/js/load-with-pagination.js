@@ -14,6 +14,8 @@ const btnToTop = document.querySelector('.to-top');
 const paginationArrows = document.querySelectorAll('.pagination__arrow');
 const paginationList = document.querySelector('.pagination__pages');
 
+let items = [...paginationList.children];
+
 // --------------------------------------------------------------
 const gallerySimpleLightbox = new SimpleLightbox('.gallery a');
 const trimmedValue = inputRef.value.trim();
@@ -44,6 +46,8 @@ function onBtnSearchClick(e) {
         renderImageList(data.hits);
         renderPagination(pages);
         paginationArrowsShow(pages, trimmedValue, pageNumber);
+        hideOverPages();
+        showPage(document.querySelector('.pagination__page--active'));
 
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
         if (data.totalHits > 0 && data.totalHits < 40) {
@@ -88,6 +92,9 @@ function renderPagination(pages) {
       const trimmedValue = inputRef.value.trim();
       let paginationPageNumber = Number(li.textContent);
       fetchImages(trimmedValue, paginationPageNumber).then(data => {
+        showPage(document.querySelector('.pagination__page--active'));
+        hideOverPages();
+
         // console.log(data);
         // console.log(paginationPageNumber, pages);
         renderImageList(data.hits);
@@ -100,7 +107,6 @@ function renderPagination(pages) {
         'li.pagination__page--active'
       );
       currentItemLi.classList.remove('pagination__page--active');
-
       li.classList.add('pagination__page--active');
     });
   }
@@ -164,8 +170,13 @@ function onPaginationArrowLeftClick(ev) {
   let pageForArrowleft = Number(currentPage.innerHTML);
   if (ev.target === paginationArrows[0]) {
     fetchImages(trimmedValue, (pageForArrowleft -= 1)).then(data => {
+      showPage(currentPage.previousSibling);
+      // hideOverPages();
       currentPage.previousSibling.classList.add('pagination__page--active');
       currentPage.classList.remove('pagination__page--active');
+      if (currentPage.previousSibling.previousSibling !== null) {
+        currentPage.previousSibling.previousSibling.classList.remove('hidden');
+      }
       pages = Math.ceil(data.totalHits / data.hits.length);
       renderImageList(data.hits);
       scrollToTop();
@@ -182,11 +193,17 @@ function onPaginationArrowRightClick(ev) {
   let pageForArrowRight = Number(currentPage.innerHTML);
   if (ev.target === paginationArrows[1]) {
     fetchImages(trimmedValue, (pageForArrowRight += 1)).then(data => {
-      // console.log(currentPage);
+      pages = Math.ceil(data.totalHits / data.hits.length);
+      // console.dir(currentPage.nextSibling);
+
+      showPage(currentPage.nextSibling);
+      hideOverPages();
       currentPage.nextSibling.classList.add('pagination__page--active');
       currentPage.classList.remove('pagination__page--active');
-      pages = Math.ceil(data.totalHits / data.hits.length);
-      // console.log(pages, pageForArrowRight);
+      if (currentPage.nextSibling.nextSibling !== null) {
+        currentPage.nextSibling.nextSibling.classList.remove('hidden');
+      }
+
       renderImageList(data.hits);
       scrollToTop();
       ifPageNum(pageForArrowRight, pages);
@@ -200,4 +217,44 @@ function scrollToTop() {
     top: 50,
     behavior: 'smooth',
   });
+}
+// -------------callback-функція для створення прихованих сторінок ... -------------------
+// const active = document.querySelector('.pagination__page--active');
+let active;
+function showPage(item) {
+  if (active) {
+    active.classList.remove('pagination__page--active');
+    active = item;
+    item.classList.add('pagination__page--active');
+
+    let showPage = 2;
+    let pageNum = +active.innerHTML;
+
+    let start = (pageNum - 1) * showPage;
+    let end = start + showPage;
+    let notes = items.slice(start, end);
+
+    for (let note of notes) {
+      hideOverPages();
+    }
+  }
+}
+
+function hideOverPages() {
+  let active = document.querySelector('.pagination__page--active');
+  let items = [...paginationList.children];
+
+  if (items.length > 7) {
+    items.forEach(item => item.classList.add('hidden'));
+    items[0].classList.remove('hidden');
+
+    if (active.previousSibling) {
+      active.previousSibling.classList.remove('hidden');
+    }
+    active.classList.remove('hidden');
+    if (active.nextSibling) {
+      active.nextSibling.classList.remove('hidden');
+    }
+    items[items.length - 1].classList.remove('hidden');
+  }
 }
