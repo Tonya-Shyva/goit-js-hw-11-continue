@@ -32,6 +32,11 @@ body {
   justify-content: center;
   align-items: center;
   height: 15%;
+  transition: background-color 300ms linear;
+}
+
+.gallery {
+  transition: background-color 300ms linear;
 }
 // Main styles
 .search-form {
@@ -60,6 +65,7 @@ input[type='text'] {
   transition: width var(--dur) var(--bez);
   z-index: 1;
 }
+
 .btn-submit {
   visibility: hidden;
   pointer-events: none;
@@ -91,6 +97,8 @@ input:not(:placeholder-shown) {
 
 .btn-submit:hover {
   background-color: var(--color-activ);
+  outline: inherit;
+  border: none;
 }
 
 .icon {
@@ -102,6 +110,44 @@ input:not(:placeholder-shown) {
   fill: currentColor;
 }
 
+// .themetoggle__icon-dark {
+// opacity:0;
+//  visibility: hidden;
+//  pointer-events: none;
+// }
+
+// ----стилі для теми день-ніч---------------------
+
+.themetoggle__container {
+  margin-left: 100px;
+}
+.themetoggle__icon-light {
+  fill: yellow;
+  transition: fill 300ms linear;
+}
+
+.themetoggle__icon-dark.is-shown ~ .themetoggle__icon-light,
+.themetoggle__icon-dark {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.themetoggle__icon-dark.is-shown {
+  opacity: 1;
+  visibility: visible;
+  cursor: pointer;
+  fill: white;
+}
+
+.form-container.js-dark-theme {
+  background-color: black;
+}
+.gallery.js-dark-theme {
+  background-color: grey;
+}
+
+// -----------стилі для кнопки Load more------------
 .load-more {
   display: flex;
   justify-content: center;
@@ -172,11 +218,14 @@ input:not(:placeholder-shown) {
 
 // ----------pagination----------------
 
-.pagination,
+.pagination {
+  margin-top: 10px;
+  justify-content: center;
+}
 .pagination__wrap {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: center;
+
   align-items: center;
 }
 

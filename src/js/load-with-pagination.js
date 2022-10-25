@@ -8,7 +8,8 @@ const inputRef = document.querySelector('input[type="text"]');
 const btnSearch = document.querySelector('.btn-submit');
 const gallery = document.querySelector('.gallery');
 const btnToTop = document.querySelector('.to-top');
-
+// -----------------slider-----------------------------------
+const sliderRef = document.querySelector('.slider');
 // -------------------pagination---------------------------
 
 const paginationArrows = document.querySelectorAll('.pagination__arrow');
@@ -18,6 +19,7 @@ let items = [...paginationList.children];
 
 // --------------------------------------------------------------
 const gallerySimpleLightbox = new SimpleLightbox('.gallery a');
+
 const trimmedValue = inputRef.value.trim();
 let pageNumber = 1;
 let pages = 0;
@@ -74,6 +76,8 @@ function cleanGallery() {
   paginationArrowsHide();
   paginationArrows[0].disabled = true;
 }
+
+// ----------------slider-------------------
 
 // -----pagination---------------------
 function renderPagination(pages) {
@@ -164,7 +168,7 @@ function onPaginationArrowRightClick(ev) {
   }
 }
 
-// колбек ф-ція для arrowListener
+//------------------ колбек ф-ція для arrowListener------------------
 function showItemByArrowPagination(itemToShow) {
   if (itemToShow !== null) {
     itemToShow.classList.remove('hidden');
@@ -201,7 +205,7 @@ function paginationArrowsShow(pages, trimmedValue, pageNumber) {
   }
 }
 
-// робить кнопки-стрілки пагінації неактивними
+// ---------------робить кнопки-стрілки пагінації неактивними -----------------
 function paginationArrowsEnable() {
   paginationArrows[0].disabled = false;
   paginationArrows[1].disabled = false;
@@ -233,7 +237,7 @@ function hideOverPages() {
   let active = document.querySelector('.pagination__page--active');
   let items = [...paginationList.children];
 
-  if (items.length > 7) {
+  if (items.length > 6) {
     items.forEach(item => item.classList.add('hidden'));
     items[0].classList.remove('hidden');
 
