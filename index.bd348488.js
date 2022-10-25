@@ -1,0 +1,2 @@
+!function(){var e=document.querySelector(".themetoggle__container"),t=document.querySelector(".form-container"),o=document.querySelector(".gallery"),r=document.querySelector(".themetoggle__icon-dark");e.addEventListener("click",(function(e){e.preventDefault(),("svg"===e.target.nodeName||"use"===e.target.nodeName)&&(r.classList.toggle("is-shown"),t.classList.toggle("js-dark-theme"),o.classList.toggle("js-dark-theme"))}))}();
+//# sourceMappingURL=index.bd348488.js.map
