@@ -87,7 +87,9 @@ function renderPagination(pages) {
     }
     paginationList.append(li);
 
-    li.addEventListener('click', () => {
+    li.addEventListener('click', onLiItemPaginationClick);
+
+    function onLiItemPaginationClick() {
       scrollToTop();
       const trimmedValue = inputRef.value.trim();
       let paginationPageNumber = Number(li.textContent);
@@ -108,7 +110,7 @@ function renderPagination(pages) {
       );
       currentItemLi.classList.remove('pagination__page--active');
       li.classList.add('pagination__page--active');
-    });
+    }
   }
 }
 
@@ -116,6 +118,59 @@ function renderPaginationBtn() {
   const liEl = document.createElement('li');
   liEl.classList.add('pagination__page');
   return liEl;
+}
+
+paginationArrows[0].addEventListener('click', onPaginationArrowLeftClick);
+paginationArrows[1].addEventListener('click', onPaginationArrowRightClick);
+
+// функція для кліку на ліву стрілку
+function onPaginationArrowLeftClick(ev) {
+  const currentPage = document.querySelector('.pagination__page--active');
+  // console.dir(currentPage);
+  let pageForArrowleft = Number(currentPage.innerHTML);
+  if (ev.target === paginationArrows[0]) {
+    fetchImages(trimmedValue, (pageForArrowleft -= 1)).then(data => {
+      renderImageList(data.hits);
+      showPage(currentPage.previousSibling);
+      hideOverPages();
+      currentPage.previousSibling.classList.add('pagination__page--active');
+      currentPage.classList.remove('pagination__page--active');
+      ifPageNum(pageForArrowleft, pages);
+
+      showItemByArrowPagination(currentPage.previousSibling.previousSibling);
+
+      // gallerySimpleLightbox.refresh();
+    });
+  }
+}
+
+// функція для кліку на праву стрілку
+function onPaginationArrowRightClick(ev) {
+  const currentPage = document.querySelector('.pagination__page--active');
+  // console.dir(currentPage);
+  let pageForArrowRight = Number(currentPage.innerHTML);
+  if (ev.target === paginationArrows[1]) {
+    fetchImages(trimmedValue, (pageForArrowRight += 1)).then(data => {
+      // console.dir(currentPage.nextSibling);
+      renderImageList(data.hits);
+      showPage(currentPage.nextSibling);
+      hideOverPages();
+      currentPage.nextSibling.classList.add('pagination__page--active');
+      currentPage.classList.remove('pagination__page--active');
+      ifPageNum(pageForArrowRight, pages);
+
+      showItemByArrowPagination(currentPage.nextSibling.nextSibling);
+    });
+  }
+}
+
+// колбек ф-ція для arrowListener
+function showItemByArrowPagination(itemToShow) {
+  if (itemToShow !== null) {
+    itemToShow.classList.remove('hidden');
+  }
+  scrollToTop();
+  gallerySimpleLightbox.refresh();
 }
 
 // колбек функція для умов номерів сторінок, щоб робити кнопки-стрілки неактивними
@@ -127,14 +182,6 @@ function ifPageNum(page, pages) {
   if (page === 1) {
     paginationArrows[0].disabled = true;
   }
-}
-
-// cтворює елемент з ...(для прихованих сторінок) для pagination
-function addThreeDotsBlock() {
-  const threeDots = document.createElement('li');
-  threeDots.classList.add('threeDots');
-  threeDots.innerText = '...';
-  return threeDots;
 }
 
 // ховає кнопки-стрілки пагінації
@@ -160,66 +207,7 @@ function paginationArrowsEnable() {
   paginationArrows[1].disabled = false;
 }
 
-paginationArrows[0].addEventListener('click', onPaginationArrowLeftClick);
-paginationArrows[1].addEventListener('click', onPaginationArrowRightClick);
-
-// функція для кліку на ліву стрілку
-function onPaginationArrowLeftClick(ev) {
-  const currentPage = document.querySelector('.pagination__page--active');
-  console.dir(currentPage);
-  let pageForArrowleft = Number(currentPage.innerHTML);
-  if (ev.target === paginationArrows[0]) {
-    fetchImages(trimmedValue, (pageForArrowleft -= 1)).then(data => {
-      showPage(currentPage.previousSibling);
-      // hideOverPages();
-      currentPage.previousSibling.classList.add('pagination__page--active');
-      currentPage.classList.remove('pagination__page--active');
-      if (currentPage.previousSibling.previousSibling !== null) {
-        currentPage.previousSibling.previousSibling.classList.remove('hidden');
-      }
-      pages = Math.ceil(data.totalHits / data.hits.length);
-      renderImageList(data.hits);
-      scrollToTop();
-      ifPageNum(pageForArrowleft, pages);
-      gallerySimpleLightbox.refresh();
-    });
-  }
-}
-
-// функція для кліку на праву стрілку
-function onPaginationArrowRightClick(ev) {
-  const currentPage = document.querySelector('.pagination__page--active');
-  // console.dir(currentPage);
-  let pageForArrowRight = Number(currentPage.innerHTML);
-  if (ev.target === paginationArrows[1]) {
-    fetchImages(trimmedValue, (pageForArrowRight += 1)).then(data => {
-      pages = Math.ceil(data.totalHits / data.hits.length);
-      // console.dir(currentPage.nextSibling);
-
-      showPage(currentPage.nextSibling);
-      hideOverPages();
-      currentPage.nextSibling.classList.add('pagination__page--active');
-      currentPage.classList.remove('pagination__page--active');
-      if (currentPage.nextSibling.nextSibling !== null) {
-        currentPage.nextSibling.nextSibling.classList.remove('hidden');
-      }
-
-      renderImageList(data.hits);
-      scrollToTop();
-      ifPageNum(pageForArrowRight, pages);
-      gallerySimpleLightbox.refresh();
-    });
-  }
-}
-//  функція для автоматичного скролу вгору (на початок) нової поточної сторінки
-function scrollToTop() {
-  window.scrollTo({
-    top: 50,
-    behavior: 'smooth',
-  });
-}
 // -------------callback-функція для створення прихованих сторінок ... -------------------
-// const active = document.querySelector('.pagination__page--active');
 let active;
 function showPage(item) {
   if (active) {
@@ -240,6 +228,7 @@ function showPage(item) {
   }
 }
 
+// -----приховані сторінки на пагінації (...) та навпаки.
 function hideOverPages() {
   let active = document.querySelector('.pagination__page--active');
   let items = [...paginationList.children];
@@ -257,4 +246,12 @@ function hideOverPages() {
     }
     items[items.length - 1].classList.remove('hidden');
   }
+}
+
+//  функція для автоматичного скролу вгору (на початок) нової поточної сторінки
+function scrollToTop() {
+  window.scrollTo({
+    top: 50,
+    behavior: 'smooth',
+  });
 }
